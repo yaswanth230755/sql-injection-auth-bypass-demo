@@ -75,8 +75,8 @@ python -m unittest discover -s tests -v
 Use these on the vulnerable route to observe bypass behavior:
 
 - Username: `' OR '1'='1' --` | Password: `anything`
-- Username: `admin'--` | Password: `anything`
-- Username: `' OR 1=1--` | Password: `anything`
+- Username: `admin' --` | Password: `anything`
+- Username: `' OR TRUE --` | Password: `anything`
 
 Try the same payloads on `/login_safe` to see mitigation in action.
 
