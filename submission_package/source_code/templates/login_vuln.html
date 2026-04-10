@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vulnerable Login | Module A</title>
+	<style>
+		body { font-family:'Courier New',monospace; background:#0d0d1a; color:#cdd6f4;
+			display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+		.box { background:#1e1e2e; border:2px solid #f38ba8; border-radius:12px; padding:38px; width:360px; }
+		h2 { color:#f38ba8; margin-bottom:8px; font-size:1.1em; }
+		.warn { background:#3d0014; border:1px solid #f38ba8; color:#f38ba8; padding:10px;
+			border-radius:6px; font-size:0.76em; margin-bottom:20px; line-height:1.6; }
+		label { font-size:0.8em; color:#6c7086; display:block; margin-bottom:4px; }
+		input { display:block; width:100%; padding:10px; margin-bottom:14px; background:#313244;
+			border:1px solid #45475a; color:#cdd6f4; border-radius:6px; font-family:inherit; font-size:0.92em; }
+		button { width:100%; padding:12px; background:#f38ba8; color:#1e1e2e; border:none;
+			border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.95em; }
+		a { display:block; text-align:center; margin-top:16px; color:#89b4fa; font-size:0.8em; }
+	</style>
+</head>
+<body>
+	<div class="box">
+		<h2>&#9888; Module A &mdash; Vulnerable Login</h2>
+		<div class="warn">
+			ACADEMIC DEMONSTRATION ONLY.<br>
+			This module intentionally uses unsafe SQL string<br>
+			concatenation. Do not use in any real system.
+		</div>
+		<form method="POST" action="/login_vuln">
+			<label>Username</label>
+			<input type="text" name="username" placeholder="Try: ' OR '1'='1' --" autocomplete="off">
+			<label>Password</label>
+			<input type="password" name="password" placeholder="Any value works in attack">
+			<button type="submit">Login (Vulnerable)</button>
+		</form>
+		<a href="/">&#8592; Back to Home</a>
+	</div>
+</body>
+</html>
