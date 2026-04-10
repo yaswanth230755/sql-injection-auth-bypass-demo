@@ -2,6 +2,8 @@
 
 Security-focused Flask demo that contrasts an intentionally vulnerable login flow against a secure, parameterized-query flow.
 
+Known limitation (demo scope): the vulnerable login route is intentionally insecure for teaching purposes and is not production-safe.
+
 ## Live Demo
 
 - https://sql-injection-demo-jgb2.onrender.com
@@ -12,6 +14,26 @@ Security-focused Flask demo that contrasts an intentionally vulnerable login flo
 - Module B (secure): parameterized query binding to block SQL injection
 - Module C (hardening): bcrypt password hashing, account lockout, and audit logging
 - Includes side-by-side UI routes for manual testing
+
+## Architecture (Vulnerable vs Secure Flow)
+
+```mermaid
+flowchart TD
+	A[User submits credentials] --> B{Selected route}
+	B -->|/login_vuln| C[Build SQL via string concatenation]
+	C --> D[SQLite executes injected SQL logic]
+	D --> E[Possible auth bypass]
+
+	B -->|/login_safe| F[Parameterized query: username = ?]
+	F --> G[bcrypt password check]
+	G --> H{Failed attempts >= 5?}
+	H -->|Yes| I[Set lock_until and block login]
+	H -->|No| J[Return invalid credentials]
+	G --> K[Success: reset counters]
+	K --> L[Write audit log]
+	I --> L
+	J --> L
+```
 
 ## Tech Stack
 
@@ -41,6 +63,12 @@ Open:
 - http://127.0.0.1:5000/
 - Vulnerable route: `/login_vuln`
 - Secure route: `/login_safe`
+
+## Automated Tests
+
+```bash
+python -m unittest discover -s tests -v
+```
 
 ## Test Payloads (Demo)
 
