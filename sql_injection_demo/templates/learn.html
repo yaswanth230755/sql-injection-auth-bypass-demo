@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learn SQL Injection | Demo Guide</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d0d1a;
+            color: #cdd6f4;
+            padding: 32px 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 860px;
+            background: #1e1e2e;
+            border: 1px solid #313244;
+            border-radius: 14px;
+            padding: 28px;
+        }
+        h1 { color: #89b4fa; margin-bottom: 10px; font-size: 1.4em; }
+        .sub { color: #6c7086; font-size: 0.84em; margin-bottom: 22px; }
+        h2 {
+            color: #f9e2af;
+            font-size: 0.98em;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+        p, li {
+            font-size: 0.84em;
+            line-height: 1.75;
+            color: #bac2de;
+        }
+        ul { padding-left: 18px; }
+        .panel {
+            background: #11111b;
+            border: 1px solid #45475a;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+        }
+        code {
+            background: #313244;
+            color: #f38ba8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.92em;
+        }
+        .safe { color: #a6e3a1; }
+        .warn { color: #f38ba8; }
+        a {
+            display: inline-block;
+            margin-top: 18px;
+            color: #89b4fa;
+            text-decoration: none;
+            font-size: 0.84em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SQL Injection Learning Guide</h1>
+        <p class="sub">Educational explanation for this demo project (safe local testing only)</p>
+
+        <h2>1) What is SQL Injection?</h2>
+        <p>
+            SQL injection happens when user input is concatenated into a SQL string, allowing the input to change query logic.
+            In authentication, attackers try to force the WHERE clause to become true.
+        </p>
+
+        <h2>2) Vulnerable pattern</h2>
+        <div class="panel">
+            <p><code>SELECT * FROM users WHERE username = '" + username + "' AND password_plain = '" + password + "'</code></p>
+            <p class="warn">Here, input is interpreted as SQL code.</p>
+        </div>
+
+        <h2>3) Common demo payloads</h2>
+        <ul>
+            <li><code>' OR '1'='1' --</code></li>
+            <li><code>admin'--</code></li>
+            <li><code>' OR 1=1--</code></li>
+        </ul>
+        <p>These payloads can bypass the vulnerable login route in this demo.</p>
+
+        <h2>4) Why parameterized queries fix it</h2>
+        <div class="panel">
+            <p><code>cursor.execute("SELECT * FROM users WHERE username = ?", (username,))</code></p>
+            <p class="safe">Input is bound as data, not parsed as SQL structure.</p>
+        </div>
+        <ul>
+            <li>DB compiles query template first.</li>
+            <li>User value is inserted as a literal string.</li>
+            <li>Payload cannot alter SQL grammar, so bypass fails.</li>
+        </ul>
+
+        <h2>5) Extra hardening in this demo</h2>
+        <ul>
+            <li>bcrypt password hashing</li>
+            <li>Account lockout after repeated failures</li>
+            <li>Audit logging for security events</li>
+        </ul>
+
+        <a href="/">&#8592; Back to Home</a>
+    </div>
+</body>
+</html>

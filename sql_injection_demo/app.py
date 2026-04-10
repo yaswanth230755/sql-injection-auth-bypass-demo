@@ -37,6 +37,12 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/learn")
+def learn():
+    """Render educational SQL injection explanation page."""
+    return render_template("learn.html")
+
+
 @app.route("/login_vuln", methods=["GET", "POST"])
 def login_vuln():
     """Module A: intentionally vulnerable login route using string-concatenated SQL."""

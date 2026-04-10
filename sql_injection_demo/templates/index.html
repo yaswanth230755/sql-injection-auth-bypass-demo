@@ -25,6 +25,7 @@
 		.btn { display: block; padding: 11px; border-radius: 7px; text-decoration: none; font-weight: bold; font-size: 0.88em; }
 		.btn-red   { background: #f38ba8; color: #1e1e2e; }
 		.btn-green { background: #a6e3a1; color: #1e1e2e; }
+		.btn-blue  { background: #89b4fa; color: #1e1e2e; }
 		.info-box {
 			background: #1e1e2e; border: 1px solid #45475a;
 			border-radius: 10px; padding: 22px; max-width: 560px; width: 100%;
@@ -34,6 +35,17 @@
 		code { background: #313244; color: #f38ba8; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
 		.note { margin-top: 14px; font-size: 0.76em; color: #6c7086; line-height: 1.7; }
 		.green { color: #a6e3a1; }
+		.learn-box {
+			margin-top: 16px;
+			background: #11111b;
+			border: 1px solid #313244;
+			border-radius: 8px;
+			padding: 14px;
+			font-size: 0.78em;
+			line-height: 1.7;
+			color: #bac2de;
+		}
+		.learn-box strong { color: #cba6f7; }
 	</style>
 </head>
 <body>
@@ -51,6 +63,11 @@
 						<p>Secure login &mdash; parameterized query + bcrypt + lockout + logging.</p>
 			<a href="/login_safe" class="btn btn-green">Secure Login</a>
 		</div>
+		<div class="card">
+			<h3 style="color:#89b4fa">&#8505; Learn SQLi</h3>
+			<p>Step-by-step breakdown of how SQL injection works and why parameters stop it.</p>
+			<a href="/learn" class="btn btn-blue">Open Learning Page</a>
+		</div>
 	</div>
 
 	<div class="info-box">
@@ -65,6 +82,14 @@
 			&nbsp;<code>admin / adminpass123</code>
 			&nbsp;<code>alice / alice2024</code>
 			&nbsp;<code>bob / bobsecret</code>
+		</div>
+
+		<div class="learn-box">
+			<strong>What to observe during demo:</strong><br>
+			1) In vulnerable mode, user input becomes SQL code.<br>
+			2) Payload <code>' OR '1'='1' --</code> can force WHERE clause to true.<br>
+			3) In secure mode, same payload is bound as plain text data.<br>
+			4) Result: no matching username, login blocked.
 		</div>
 	</div>
 </body>
