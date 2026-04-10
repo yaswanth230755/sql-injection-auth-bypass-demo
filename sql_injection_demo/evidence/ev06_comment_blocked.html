@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset='utf-8'><title>EV06 T10 admin&#x27;-- Blocked</title><style>body{font-family:monospace;background:#101217;color:#e8e8e8;padding:24px;}pre{white-space:pre-wrap;word-break:break-word;background:#1b1f2a;padding:16px;border-radius:8px;border:1px solid #333;}h1{font-size:20px;} </style></head><body><h1>EV06 T10 admin&#x27;-- Blocked</h1><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+	&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;Login Failed&lt;/title&gt;
+	&lt;style&gt;
+		body { font-family:&#x27;Courier New&#x27;,monospace; background:#0d0d1a; color:#cdd6f4;
+					 display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+		.card { background:#1e1e2e; border-radius:12px; padding:34px; max-width:640px; width:100%; }
+		.fail { background:#1a1a2e; border:1px solid #45475a; padding:14px; border-radius:8px; margin-bottom:12px; }
+		.reason { color:#f38ba8; font-size:0.84em; margin:10px 0; }
+		.mitigated { background:#0d2b12; border:1px solid #a6e3a1; color:#a6e3a1;
+								 padding:12px; border-radius:6px; margin-top:10px; font-size:0.82em; line-height:1.7; }
+		.query-box { background:#11111b; border:1px solid #313244; border-radius:8px;
+								 padding:16px; margin-top:18px; word-break:break-all; }
+		.query-box strong { color:#cba6f7; display:block; margin-bottom:8px; font-size:0.82em; }
+		code { color:#f9e2af; font-size:0.85em; line-height:1.7; }
+		.meta { color:#6c7086; font-size:0.76em; margin-top:12px; }
+		a { display:block; text-align:center; margin-top:18px; color:#89b4fa; font-size:0.82em; }
+	&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;div class=&quot;card&quot;&gt;
+		&lt;div class=&quot;fail&quot;&gt;&amp;#10006; Login Failed&lt;/div&gt;
+
+		
+			&lt;p class=&quot;reason&quot;&gt;Reason: Invalid credentials.&lt;/p&gt;
+		
+
+		
+			&lt;div class=&quot;mitigated&quot;&gt;
+				&amp;#10004; MITIGATION ACTIVE: Parameterized query compiled SQL structure&lt;br&gt;
+				before any user input was processed. The injection payload was&lt;br&gt;
+				bound as a literal data value - it cannot alter query logic.&lt;br&gt;
+				No user with that literal username exists &amp;#8594; access correctly denied.
+			&lt;/div&gt;
+		
+
+		&lt;div class=&quot;query-box&quot;&gt;
+			&lt;strong&gt;SQL QUERY USED:&lt;/strong&gt;
+			&lt;code&gt;SELECT * FROM users WHERE username = ? -&amp;gt; value bound as literal data: (&amp;#39;admin&amp;#39;--&amp;#39;)&lt;/code&gt;
+		&lt;/div&gt;
+
+		&lt;p class=&quot;meta&quot;&gt;Module mode: SECURE&lt;/p&gt;
+		&lt;a href=&quot;/&quot;&gt;&amp;#8592; Back to Home&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></body></html>

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: sql-injection-demo
+    env: python
+    plan: free
+    buildCommand: pip install -r sql_injection_demo/requirements.txt
+    startCommand: python -m sql_injection_demo.bootstrap_db && gunicorn -b 0.0.0.0:$PORT sql_injection_demo.app:app
+    envVars:
+      - key: APP_SECRET_KEY
+        generateValue: true
+      - key: FLASK_DEBUG
+        value: "0"
