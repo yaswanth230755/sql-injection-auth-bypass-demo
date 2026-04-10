@@ -1,4 +1,6 @@
 .venv/
+venv/
+env/
 __pycache__/
 *.pyc
 *.pyo
@@ -10,5 +12,18 @@ sql_injection_demo/auth.log
 users.db
 auth.log
 
+# Assignment/report artifacts not needed for public repo
+CS_Assignment_eval1_final/
+submission_package/
+resume_output/
+sql_injection_demo/eval1/
+sql_injection_demo/eval2/
+sql_injection_demo/evidence/
+*.pdf
+*.zip
+
 # OS/editor noise
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/

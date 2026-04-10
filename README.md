@@ -1,0 +1,57 @@
+# sql-injection-auth-bypass-demo
+
+Security-focused Flask demo that contrasts an intentionally vulnerable login flow against a secure, parameterized-query flow.
+
+## Highlights
+
+- Module A (vulnerable): SQL string concatenation to demonstrate authentication bypass
+- Module B (secure): parameterized query binding to block SQL injection
+- Module C (hardening): bcrypt password hashing, account lockout, and audit logging
+- Includes side-by-side UI routes for manual testing
+
+## Tech Stack
+
+- Python
+- Flask
+- SQLite
+- bcrypt
+- Gunicorn
+
+## Run Locally
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r sql_injection_demo/requirements.txt
+python -m sql_injection_demo.bootstrap_db
+python sql_injection_demo/app.py
+```
+
+Open:
+
+- http://127.0.0.1:5000/
+- Vulnerable route: `/login_vuln`
+- Secure route: `/login_safe`
+
+## Test Payloads (Demo)
+
+Use these on the vulnerable route to observe bypass behavior:
+
+- Username: `' OR '1'='1' --` | Password: `anything`
+- Username: `admin'--` | Password: `anything`
+- Username: `' OR 1=1--` | Password: `anything`
+
+Try the same payloads on `/login_safe` to see mitigation in action.
+
+## Deploy (Render)
+
+This repo includes:
+
+- `render.yaml` (Blueprint deployment)
+- `Procfile` (platform fallback)
+
+Render start command bootstraps DB only when missing and serves via Gunicorn.
+
+## Security Notice
+
+This project contains an intentionally vulnerable route for educational demonstration only. Do not use this code pattern in production systems.
