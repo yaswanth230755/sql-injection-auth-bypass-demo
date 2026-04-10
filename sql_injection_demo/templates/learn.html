@@ -81,10 +81,11 @@
         <ul>
             <li><code>' OR '1'='1' --</code></li>
             <li><code>admin' --</code></li>
-            <li><code>' OR 1=1 --</code></li>
+            <li><code>' OR TRUE --</code></li>
         </ul>
         <p>These payloads can bypass the vulnerable login route in this demo.</p>
         <p class="sub">Tip: keep a space before and after <code>--</code> to avoid SQL parser syntax errors.</p>
+        <p class="sub">Note: some managed platforms block obvious patterns like <code>OR 1=1</code> at WAF level; equivalent payloads may still demonstrate the same vulnerability.</p>
 
         <h2>4) Why parameterized queries fix it</h2>
         <div class="panel">
