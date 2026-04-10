@@ -21,15 +21,20 @@ Security-focused Flask demo that contrasts an intentionally vulnerable login flo
 - bcrypt
 - Gunicorn
 
-## Run Locally
+## Quick Start (Local)
 
 ```bash
+# Skip clone if you already have the repository
+git clone https://github.com/yaswanth230755/sql-injection-auth-bypass-demo.git
+cd sql-injection-auth-bypass-demo
 python -m venv .venv
 source .venv/bin/activate
 pip install -r sql_injection_demo/requirements.txt
 python -m sql_injection_demo.bootstrap_db
 python sql_injection_demo/app.py
 ```
+
+Run commands from the repository root (`sql-injection-auth-bypass-demo`) so relative paths resolve correctly.
 
 Open:
 
@@ -47,14 +52,9 @@ Use these on the vulnerable route to observe bypass behavior:
 
 Try the same payloads on `/login_safe` to see mitigation in action.
 
-## Deploy (Render)
+## Deploy
 
-This repo includes:
-
-- `render.yaml` (Blueprint deployment)
-- `Procfile` (platform fallback)
-
-Render start command bootstraps DB only when missing and serves via Gunicorn.
+For deployment options and platform-specific setup, see DEPLOY_RESUME.md.
 
 ## Security Notice
 
