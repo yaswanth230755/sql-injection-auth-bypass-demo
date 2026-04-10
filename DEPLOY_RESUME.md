@@ -3,6 +3,10 @@
 This project includes an intentionally vulnerable route for educational use.
 Do not deploy it without clearly labeling it as a security demo.
 
+## Live Deployment
+
+- https://sql-injection-demo-jgb2.onrender.com
+
 ## Option 1: Render (recommended)
 
 1. Push this repository to GitHub.

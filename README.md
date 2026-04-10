@@ -2,6 +2,10 @@
 
 Security-focused Flask demo that contrasts an intentionally vulnerable login flow against a secure, parameterized-query flow.
 
+## Live Demo
+
+- https://sql-injection-demo-jgb2.onrender.com
+
 ## Highlights
 
 - Module A (vulnerable): SQL string concatenation to demonstrate authentication bypass
