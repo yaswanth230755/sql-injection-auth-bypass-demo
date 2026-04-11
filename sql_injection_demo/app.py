@@ -1,7 +1,6 @@
-"""Flask application entrypoint for the SQL injection assignment.
+"""Flask application entrypoint for the SQL injection demo project.
 
-CS4033E Computer Security | NIT Calicut
-Academic demonstration only — local test environment.
+Security training demonstration only — local test environment.
 
 Routes:
     GET  /             -> Home page (module selector)
@@ -25,7 +24,7 @@ except ImportError:
     from auth_vulnerable import vulnerable_login
 
 app = Flask(__name__)
-app.secret_key = os.getenv("APP_SECRET_KEY", "cs4033e_nitc_demo_only")
+app.secret_key = os.getenv("APP_SECRET_KEY", "sqli_demo_project_only")
 
 # Maximum input length accepted before truncating (robustness guard)
 MAX_INPUT_LEN = 200
@@ -88,7 +87,7 @@ def login_safe():
     password = request.form.get("password", "")[:MAX_INPUT_LEN]
     source_ip = request.remote_addr or "unknown"
 
-    # Show the parameterized template so evaluator can see the difference
+    # Show the parameterized template so readers can see the difference
     display_query = (
         "SELECT * FROM users WHERE username = ?  "
         f"-- value bound as literal data: ('{username}')"

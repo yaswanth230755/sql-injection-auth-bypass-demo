@@ -1,7 +1,5 @@
 """Audit logging utility for authentication security events.
 
-CS4033E Computer Security | NIT Calicut
-
 Writes to two destinations:
     1. auth.log     — human-readable flat file (easy to show during demo)
     2. audit_log    — structured SQLite table (queryable, part of DB schema)

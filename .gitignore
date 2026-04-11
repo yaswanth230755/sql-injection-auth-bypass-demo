@@ -12,16 +12,13 @@ sql_injection_demo/auth.log
 users.db
 auth.log
 
-# Assignment/report artifacts not needed for public repo
+# Local notes/docs artifacts not needed for public repo
 01_Scope_Lock.md
 Approach.md
 NEXT_MANUAL_STEPS.md
 RESUME_PROJECT_TEXT.md
-CS_Assignment_eval1_final/
 submission_package/
 resume_output/
-sql_injection_demo/eval1/
-sql_injection_demo/eval2/
 sql_injection_demo/evidence/
 sql_injection_demo/13_Technical_Explanation.md
 sql_injection_demo/test_matrix_results_step11.md

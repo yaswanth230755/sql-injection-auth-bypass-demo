@@ -1,7 +1,6 @@
-"""Database initialization script for the SQL injection assignment.
+"""Database initialization script for the SQL injection demo project.
 
-CS4033E Computer Security | NIT Calicut
-Academic demonstration only — local test environment.
+Security training demonstration only — local test environment.
 
 Run this once before starting the app.
 Safe to re-run — drops and recreates all tables for a clean state.

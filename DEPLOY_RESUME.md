@@ -6,6 +6,15 @@ This project is a security-focused Flask demo that contrasts vulnerable SQL-base
 
 - https://sql-injection-demo-jgb2.onrender.com
 
+## Related Project Files
+
+- Final master document: [FINAL_COMPLETE_SUBMISSION_MASTER.md](FINAL_COMPLETE_SUBMISSION_MASTER.md)
+- Primary project overview: [README.md](README.md)
+- Render blueprint config: [render.yaml](render.yaml)
+- Procfile fallback: [Procfile](Procfile)
+- Flask app entrypoint: [sql_injection_demo/app.py](sql_injection_demo/app.py)
+- Deployment bootstrap helper: [sql_injection_demo/bootstrap_db.py](sql_injection_demo/bootstrap_db.py)
+
 ## Resume-Ready Highlights
 
 - Built and deployed a Flask security demo showing SQL injection authentication bypass versus parameterized-query mitigation.

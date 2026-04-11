@@ -8,6 +8,15 @@ Known limitation (demo scope): the vulnerable login route is intentionally insec
 
 - https://sql-injection-demo-jgb2.onrender.com
 
+## Quick Navigation
+
+- Final master document: [FINAL_COMPLETE_SUBMISSION_MASTER.md](FINAL_COMPLETE_SUBMISSION_MASTER.md)
+- Deployment notes: [DEPLOY_RESUME.md](DEPLOY_RESUME.md)
+- Main app entrypoint: [sql_injection_demo/app.py](sql_injection_demo/app.py)
+- Vulnerable auth module: [sql_injection_demo/auth_vulnerable.py](sql_injection_demo/auth_vulnerable.py)
+- Secure auth module: [sql_injection_demo/auth_secure.py](sql_injection_demo/auth_secure.py)
+- Automated tests: [tests/test_auth_flows.py](tests/test_auth_flows.py)
+
 ## Highlights
 
 - Module A (vulnerable): SQL string concatenation to demonstrate authentication bypass
@@ -82,7 +91,7 @@ Try the same payloads on `/login_safe` to see mitigation in action.
 
 ## Deploy
 
-For deployment options and platform-specific setup, see DEPLOY_RESUME.md.
+For deployment options and platform-specific setup, see [DEPLOY_RESUME.md](DEPLOY_RESUME.md).
 
 ## Security Notice
 

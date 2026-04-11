@@ -1,7 +1,6 @@
 """Intentionally vulnerable authentication module.
 
-CS4033E Computer Security | NIT Calicut
-ACADEMIC DEMONSTRATION ONLY — DO NOT USE IN ANY PRODUCTION SYSTEM.
+SECURITY TRAINING DEMONSTRATION ONLY — DO NOT USE IN ANY PRODUCTION SYSTEM.
 
 This module is deliberately insecure to demonstrate SQL injection-based
 authentication bypass in a controlled local test environment.

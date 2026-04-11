@@ -1,7 +1,5 @@
 """Secure authentication module with parameterized queries and hardening.
 
-CS4033E Computer Security | NIT Calicut
-
 Primary mitigation : Parameterized SQL query (? placeholder).
 Additional hardening: bcrypt password hashing, account lockout, audit logging.
 """
