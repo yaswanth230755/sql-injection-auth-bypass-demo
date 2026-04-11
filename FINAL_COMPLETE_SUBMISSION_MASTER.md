@@ -262,7 +262,7 @@ Burp Suite supports HTTP interception, replay, fuzzing, and scanner-assisted vul
 
 ### 3.3 OWASP Testing and Prevention Guidance
 
-OWASP Top 10 2021 — A03:2021 Injection and the SQL Injection Prevention Cheat Sheet recommend parameterized queries as the primary SQLi control. The testing guide documents common payload families: tautology (`' OR '1'='1' --`), union-based, comment-truncation (`admin'--`), and inference/time-based.
+OWASP Top 10 2021 — A03:2021 Injection and the SQL Injection Prevention Cheat Sheet recommend parameterized queries as the primary SQLi control. The testing guide documents common payload families: tautology (`' OR '1'='1' --`), union-based, comment-truncation (`admin' --`), and inference/time-based.
 
 ### 3.4 Parameterized Queries / Prepared Statements
 
@@ -507,8 +507,8 @@ gunicorn -b 0.0.0.0:8000 sql_injection_demo.app:app
 | ev02_normal_secure.png | Normal login success — secure side |
 | ev03_attack_bypass.png | T07 bypass with query displayed |
 | ev04_attack_blocked.png | T08 blocked with mitigation banner |
-| ev05_comment_attack.png | T09 admin'-- bypass |
-| ev06_comment_blocked.png | T10 admin'-- blocked |
+| ev05_comment_attack.png | T09 admin' -- bypass |
+| ev06_comment_blocked.png | T10 admin' -- blocked |
 | ev07_lockout.png | T13 lockout triggered |
 | ev08_audit_log.png | auth.log contents |
 | ev09_code_vuln.png | Dangerous concatenation line |
