@@ -8,7 +8,7 @@ This project is a security-focused Flask demo that contrasts vulnerable SQL-base
 
 ## Related Project Files
 
-- Final master document: [FINAL_COMPLETE_SUBMISSION_MASTER.md](FINAL_COMPLETE_SUBMISSION_MASTER.md)
+- Final master document: [PROJECT_MASTER_GUIDE.md](PROJECT_MASTER_GUIDE.md)
 - Primary project overview: [README.md](README.md)
 - Render blueprint config: [render.yaml](render.yaml)
 - Procfile fallback: [Procfile](Procfile)

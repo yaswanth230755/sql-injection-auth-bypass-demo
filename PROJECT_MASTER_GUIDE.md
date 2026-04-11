@@ -11,7 +11,7 @@
 ## Quick File Links
 
 - Project overview: [README.md](README.md)
-- Deployment notes: [DEPLOY_RESUME.md](DEPLOY_RESUME.md)
+- Deployment notes: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
 - Flask app entry: [sql_injection_demo/app.py](sql_injection_demo/app.py)
 - Vulnerable module: [sql_injection_demo/auth_vulnerable.py](sql_injection_demo/auth_vulnerable.py)
 - Secure module: [sql_injection_demo/auth_secure.py](sql_injection_demo/auth_secure.py)
@@ -752,7 +752,7 @@ Use:
 Option 1 (Pandoc):
 
 ```bash
-pandoc FINAL_COMPLETE_SUBMISSION_MASTER.md -o AdimulamYaswanthVeeraNagesh_B230755CS.pdf \
+pandoc PROJECT_MASTER_GUIDE.md -o AdimulamYaswanthVeeraNagesh_B230755CS.pdf \
     --pdf-engine=wkhtmltopdf \
     --margin-top=25mm --margin-bottom=25mm \
     --margin-left=25mm --margin-right=25mm
@@ -783,7 +783,7 @@ Recommended final folder structure:
 submission_package/
 ├── report/
 │   ├── AdimulamYaswanthVeeraNagesh_B230755CS.pdf
-│   └── FINAL_COMPLETE_SUBMISSION_MASTER.md
+│   └── PROJECT_MASTER_GUIDE.md
 ├── source_code/
 │   ├── app.py
 │   ├── auth_vulnerable.py
