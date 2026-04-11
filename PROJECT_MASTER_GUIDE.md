@@ -501,6 +501,8 @@ gunicorn -b 0.0.0.0:8000 sql_injection_demo.app:app
 
 ### Evidence File Map
 
+Note: These screenshot artifacts are maintained in the presentation package and are intentionally not committed in this repository.
+
 | File | Content |
 |---|---|
 | ev01_normal_vuln.png | Normal login success — vulnerable side |
@@ -841,3 +843,400 @@ submission_package/
 4. Show same payload on both routes for before/after proof.
 5. Keep logs free of sensitive data (never log raw passwords).
 6. Keep local and cloud behavior notes explicit (for WAF signature differences).
+
+
+---
+
+## 17. Assignment Report Mirror
+
+The following content is included verbatim to ensure full one-to-one information coverage from the assignment report in this master guide.
+
+# CS4032E: Computer Security — Security Assignment (Evaluation I)
+## SQL Injection-Based Authentication Bypass in a Self-Built Login Module with Parameterized Query Mitigation
+
+**Name:** Adimulam Yaswanth Veera Nagesh  
+**Roll Number:** B230755CS  
+**Course:** CS4032E Computer Security | NIT Calicut  
+**Semester:** VI B.Tech. CSE — Winter 2025-26  
+**Submission Date:** 11 April 2026
+
+---
+
+## 1. Title of the Security Assignment
+
+**SQL Injection-Based Authentication Bypass in a Self-Built Login Module with Parameterized Query Mitigation**
+
+**Adimulam Yaswanth Veera Nagesh (B230755CS)**
+
+This assignment implements a login system from scratch (Python + Flask + SQLite) with two parallel authentication paths: (1) an intentionally vulnerable path using SQL string concatenation, and (2) a secure path using parameterized query binding with bcrypt hashing, account lockout, and audit logging. The work emphasises coding intervention and reproducible testing rather than merely executing existing attack tools.
+
+---
+
+## 2. Abstract
+
+SQL injection remains one of the most damaging application vulnerabilities because it allows user input to alter backend query logic. In authentication modules, this can lead to direct login bypass without any valid credentials. This assignment demonstrates that risk using a self-built vulnerable login flow and then mitigates it using parameterized SQL queries in a secure flow. The full implementation is written in Python and Flask with SQLite, and includes defence-in-depth controls: bcrypt password hashing, account lockout after repeated failures, and dual-channel audit logging.
+
+A comparative test process was executed across vulnerable and secure routes using identical credential sets and injection payloads. In the vulnerable flow, crafted payloads bypassed authentication by changing the WHERE-clause logic. In the secure flow, the same payloads were blocked because the database bound input as data rather than interpreting it as executable SQL syntax. Valid credentials continued to function correctly in both expected paths, and lockout and logging behaviours were verified through automated tests and manual demonstration.
+
+During deployment testing on the live Render instance, some managed-edge WAF rules block the `OR 1=1` signature. The functionally equivalent payload `' OR TRUE --` was used for live demonstration reproducibility. This nuance does not change the core result: parameterized queries block all tautology-based payloads at the DB execution layer regardless of their specific form.
+
+---
+
+## 3. Introduction
+
+SQL injection (SQLi) is classified under OWASP Top 10 A03:2021 — Injection [1]. It occurs when untrusted user input is merged directly into query text and interpreted as SQL grammar. Authentication systems are especially sensitive because successful SQLi can bypass the primary access-control boundary without valid credentials.
+
+In insecure login implementations, code often constructs queries as:
+
+```sql
+SELECT * FROM users WHERE username = '<input>' AND password = '<input>'
+```
+
+When an attacker inputs a tautology (`' OR '1'='1' --`) into the username field, the query structure is altered so the password predicate is neutralised and the database returns a valid row for the first user in the table.
+
+The correct mitigation is parameterized query binding: SQL structure is compiled first, and user input is bound as typed data literals. This makes structural manipulation through input content impossible regardless of what the attacker supplies. This assignment builds both behaviours in one controlled codebase and validates outcomes through automated tests and a structured 17-row test matrix.
+
+---
+
+## 4. Literature Survey
+
+### 4.1 sqlmap
+
+sqlmap [2] is an open-source tool that automates SQLi detection and exploitation. It supports boolean-based, time-based blind, error-based, UNION-based, and stacked-queries strategies across MySQL, PostgreSQL, SQLite, Oracle, and MSSQL. sqlmap is widely used in professional penetration testing assessments. In this assignment, the vulnerable query pattern was coded manually to show the root cause at code level rather than relying on automated exploitation.
+
+### 4.2 Burp Suite
+
+Burp Suite [3] is a web security testing platform. The Scanner module identifies injection points by fuzzing parameters with payloads. The Repeater and Intruder modules allow manual crafting and replay of HTTP requests. Burp Suite is relevant for identifying candidate injection points and observing how payloads affect HTTP request/response cycles in web authentication workflows.
+
+### 4.3 OWASP Testing and Prevention Guidance
+
+The OWASP Top 10 and SQL Injection Prevention Cheat Sheet [1, 4] recommend parameterized queries as the primary SQLi defence. The testing guide documents common payload families used in this assignment: tautology-based (`' OR '1'='1' --`), comment-truncation (`admin' --`), and alternate tautology (`' OR TRUE --`).
+
+### 4.4 Parameterized Queries / Prepared Statements
+
+Parameterized execution [4] separates SQL code structure from user-supplied data. In Python `sqlite3`, the `?` placeholder is used:
+
+```python
+cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+```
+
+The DB engine receives the template, compiles the execution plan, then binds the user value as a typed literal. User input is never parsed as SQL tokens, preventing structural query manipulation regardless of content.
+
+### 4.5 bcrypt Password Hashing
+
+bcrypt [5, 7] adds a per-password random salt and a configurable computational cost factor. Published by Provos and Mazières (1999), it is suited for password storage because the same password produces a different hash on each call (defeating pre-computed rainbow tables), and the cost factor makes brute-force attacks computationally expensive even if the database is leaked.
+
+### 4.6 Technique Comparison
+
+| Technique | Layer | SQLi Prevention Strength | Notes |
+|---|---|---|---|
+| Parameterized queries | DB execution | High — structural guarantee | Primary and required baseline |
+| Input validation / filtering | Application | Medium/low | Useful but bypassable via encoding or second-order injection |
+| Stored procedures | Database | Medium/high | Safe only when parameterized internally; can still be vulnerable if they use dynamic SQL |
+| WAF | Edge/network | Partial | Signature-based; can over-block or be evaded by payload variation |
+| ORM | App/data access | Medium/high | Raw query methods bypass ORM protections |
+
+**Key takeaway:** Parameterized queries are the only consistently reliable baseline defence across all payload variations because they operate at the DB compilation layer, not the application layer.
+
+---
+
+## 5. System/Network Environment
+
+### 5.1 Hardware Requirements
+
+| Component | Requirement |
+|---|---|
+| CPU | Any modern x86-64 or ARM processor |
+| RAM | 512 MB minimum (2 GB recommended) |
+| Storage | 100 MB free space |
+| Network | Localhost sufficient for implementation and testing |
+
+### 5.2 Software Requirements
+
+| Component | Version | Purpose |
+|---|---|---|
+| OS | Linux / macOS / Windows | Development and runtime |
+| Python | 3.9 or higher | Application runtime |
+| Flask | 3.1.3 (pinned in requirements.txt) | Web framework |
+| bcrypt | 5.0.0 (pinned in requirements.txt) | Password hashing |
+| gunicorn | 23.0.0 (pinned in requirements.txt) | Production WSGI server |
+| SQLite | Python stdlib `sqlite3` | Embedded database (no separate install) |
+| Web browser | Any modern browser | Frontend UI |
+
+### 5.3 Runtime and Network Notes
+
+- Primary implementation and testing on localhost only (127.0.0.1:5000)
+- Cloud deployment on Render used additionally for live demonstration: https://sql-injection-demo-jgb2.onrender.com
+- Vulnerable route exists strictly for academic demonstration in a controlled environment
+- `users.db` and `auth.log` are runtime-generated files excluded from version control via `.gitignore`
+
+### 5.4 Installation and Execution
+
+```bash
+git clone https://github.com/yaswanth230755/sql-injection-auth-bypass-demo.git
+cd sql-injection-auth-bypass-demo
+python -m venv .venv
+source .venv/bin/activate
+pip install -r sql_injection_demo/requirements.txt
+python -m sql_injection_demo.bootstrap_db
+python sql_injection_demo/app.py
+```
+
+Open http://127.0.0.1:5000 in a browser.
+
+---
+
+## 6. Design of Modules
+
+### 6.1 Module A — Vulnerable Authentication
+
+**File:** `sql_injection_demo/auth_vulnerable.py`
+
+**Objective:** Demonstrate SQLi authentication bypass caused by string concatenation in query construction.
+
+**Core insecure construction:**
+
+```python
+query = (
+    "SELECT * FROM users "
+    "WHERE username = '" + username + "' "
+    "AND password_plain = '" + password + "'"
+)
+cursor.execute(query)
+```
+
+**Algorithm:**
+
+```
+Input : username (string), password (string)
+Output: (user_dict_or_none, query_string, error_or_none)
+
+1. Construct SQL string by direct string concatenation of user input.
+2. Execute constructed query against users.db.
+3. If one row is returned, treat as authenticated user.
+4. If SQL parsing or execution fails (malformed injection), return error string.
+5. If no row returned, reject login.
+```
+
+**Attack example — input `' OR '1'='1' --` as username:**
+
+```sql
+SELECT * FROM users WHERE username = '' OR '1'='1' --' AND password_plain = 'anything'
+```
+
+`OR '1'='1'` is always TRUE. `--` comments out the password check. The database returns the first row. Login succeeds without any valid password.
+
+**Input:** username, password (no validation or length limit in vulnerable path)  
+**Output:** user dict on bypass success; the constructed SQL query string; error string if SQL fails
+
+---
+
+### 6.2 Module B — Secure Authentication (Parameterized Query + bcrypt)
+
+**File:** `sql_injection_demo/auth_secure.py`
+
+**Objective:** Prevent SQLi through parameterized query binding and enforce secure password verification.
+
+**Core secure lookup:**
+
+```python
+c.execute("SELECT * FROM users WHERE username = ?", (username,))
+```
+
+**Algorithm:**
+
+```
+Input : username (string), password (string), source_ip (string)
+Output: (user_dict_or_none, message_or_none, success_bool)
+
+1. Run parameterized username lookup.
+   DB receives template first, compiles structure, then binds value as data.
+2. If user not found: log LOGIN_FAIL_USER_NOT_FOUND, return "Invalid credentials.", False.
+3. If account locked (time.time() < lock_until): log LOGIN_BLOCKED_ACCOUNT_LOCKED,
+   return lock message with remaining seconds, False.
+4. Verify password: bcrypt.checkpw(password.encode(), user["password_hash"].encode())
+5. On wrong password:
+   a. Increment failed_attempts.
+   b. If failed_attempts >= MAX_ATTEMPTS (5): set lock_until = now + LOCKOUT_SECS (300).
+   c. Log appropriate event.
+   d. Return "Invalid credentials.", False.
+6. On success: reset failed_attempts = 0, lock_until = NULL.
+   Log LOGIN_SUCCESS. Return user dict, None, True.
+```
+
+**Why the `?` placeholder prevents injection:**  
+The DB engine receives `SELECT * FROM users WHERE username = ?` and compiles the execution plan — query structure is locked before any user value arrives. The value `' OR '1'='1' --` is then bound as a typed 20-character string literal. The parser never sees it. It is treated as a literal value to search for. No user with that username exists, so login fails correctly.
+
+**Input:** username, password, source IP address  
+**Output:** user dict on success; error/lock message on failure; success boolean
+
+---
+
+### 6.3 Module C — Hardening Controls
+
+**Files:** `sql_injection_demo/auth_secure.py`, `sql_injection_demo/logger.py`, `sql_injection_demo/database.py`
+
+#### bcrypt Password Hashing
+
+```python
+# At database seeding (database.py):
+hashed = bcrypt.hashpw(pwd.encode(), bcrypt.gensalt()).decode()
+
+# At secure login verification (auth_secure.py):
+password_correct = bcrypt.checkpw(password.encode(), user["password_hash"].encode())
+```
+
+bcrypt generates a random salt per hash. The same password produces a different hash on every call — defeating pre-computed rainbow table attacks. The cost factor makes brute-forcing computationally expensive even if the database file is leaked. Plaintext passwords are never compared in the secure module.
+
+#### Account Lockout
+
+```python
+MAX_ATTEMPTS = 5     # consecutive failures before lockout
+LOCKOUT_SECS = 300   # 5-minute lockout duration
+
+if new_attempts >= MAX_ATTEMPTS:
+    lock_until = time.time() + LOCKOUT_SECS
+```
+
+`failed_attempts` increments on each wrong password. At threshold, `lock_until` is set to `now + 300`. Subsequent attempts return a lockout message with remaining seconds. On successful login, both counters reset to 0 / NULL.
+
+#### Audit Logging
+
+Events written to both `auth.log` (flat file, human-readable) and `audit_log` SQLite table (structured, queryable). Events logged: `LOGIN_SUCCESS`, `LOGIN_FAIL_USER_NOT_FOUND`, `LOGIN_FAIL_WRONG_PASSWORD_ATTEMPT_N`, `ACCOUNT_LOCKED_AFTER_N_FAILURES`, `LOGIN_BLOCKED_ACCOUNT_LOCKED`. Raw passwords are never logged.
+
+#### User Enumeration Prevention
+
+Both unknown-username and wrong-password cases return the same message: `"Invalid credentials."` An attacker cannot determine from the response which field was incorrect.
+
+---
+
+### 6.4 Module D — Flask Application Routing and UI
+
+**File:** `sql_injection_demo/app.py`
+
+| Route | Method | Purpose |
+|---|---|---|
+| `/` | GET | Home page with module selector and attack payload hints |
+| `/learn` | GET | SQLi educational explanation page |
+| `/login_vuln` | GET/POST | Module A — vulnerable flow demonstration |
+| `/login_safe` | GET/POST | Module B+C — secure flow demonstration |
+
+Input forms are length-bounded (`MAX_INPUT_LEN = 200`) on the server side. Result pages render the SQL query or parameterized template on-screen so the behavioral difference is visually clear to evaluators.
+
+---
+
+### 6.5 Module E — Database Initialization
+
+**Files:** `sql_injection_demo/database.py`, `sql_injection_demo/bootstrap_db.py`
+
+`database.py` drops and recreates tables, then seeds three test users. `bootstrap_db.py` is an idempotent wrapper: it checks whether the `users` table already exists and skips initialization if it does — preventing data loss on deployment restarts while still handling first-time deployments.
+
+**Schema:**
+
+**users:** `id` (PK), `username` (UNIQUE), `password_plain` (vulnerable module only), `password_hash` (bcrypt, secure module only), `role`, `failed_attempts`, `lock_until`
+
+**audit_log:** `id` (PK), `timestamp`, `username`, `event`, `source`
+
+**Seeded test users:** `admin / adminpass123` (administrator) · `alice / alice2024` (user) · `bob / bobsecret` (user)
+
+---
+
+## 7. Progress of Implementation
+
+### 7.1 Implementation Status
+
+| Step | Work Item | Status |
+|---|---|---|
+| 1 | Project structure and virtual environment | Complete |
+| 2 | database.py + bootstrap_db.py | Complete |
+| 3 | auth_vulnerable.py — Module A | Complete |
+| 4 | auth_secure.py — Module B+C | Complete |
+| 5 | logger.py — dual-channel audit logging | Complete |
+| 6 | app.py — Flask routes including /learn | Complete |
+| 7 | All 6 HTML templates | Complete |
+| 8 | tests/test_auth_flows.py — 5 automated tests | Complete |
+| 9 | Local verification at localhost:5000 | Complete |
+| 10 | Deployment to Render with live URL | Complete |
+
+### 7.2 Automated Tests
+
+Repository automated tests are in `tests/test_auth_flows.py`. All 5 pass:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Coverage:
+1. Home route loads (HTTP 200)
+2. Vulnerable route shows ATTACK SUCCESSFUL banner for SQLi payload
+3. Secure route shows MITIGATION ACTIVE banner for same payload
+4. Secure route returns lockout message after 5 repeated failures
+5. Audit log file is written after a failed login attempt
+
+### 7.3 Manual Demonstration Payloads
+
+| Payload | Type | Local | Live (Render) |
+|---|---|---|---|
+| `' OR '1'='1' --` | Tautology | Works | Works |
+| `admin' --` | Comment truncation | Works | Works |
+| `' OR TRUE --` | Alternate tautology | Works | Works (preferred for live demo) |
+
+Note: Some managed edge WAF configurations block `OR 1=1` signatures. `' OR TRUE --` demonstrates the identical vulnerability and is functionally equivalent for this SQLi pattern.
+
+### 7.4 Evidence Mapping
+
+| Evidence | Content |
+|---|---|
+| ev01_normal_vuln.png | Normal login success on vulnerable side |
+| ev02_normal_secure.png | Normal login success on secure side |
+| ev03_attack_bypass.png | Injection bypass visible on vulnerable path |
+| ev04_attack_blocked.png | Same payload blocked on secure path |
+| ev05_comment_attack.png | `admin' --` bypass on vulnerable |
+| ev06_comment_blocked.png | `admin' --` blocked on secure |
+| ev07_lockout.png | Account locked after 5 failures |
+| ev08_audit_log.png | auth.log entries for events |
+| ev09_code_vuln.png | Dangerous concatenation line in editor |
+| ev10_code_secure.png | Parameterized `?` line in editor |
+| ev11_bcrypt_hash.png | `$2b$` prefix visible in DB |
+
+---
+
+## 8. Conclusion
+
+The assignment successfully demonstrates both exploitation and mitigation of SQL injection in authentication logic through a fully self-built, testable, and deployed implementation.
+
+The vulnerable module proves that concatenating user input into SQL permits authentication bypass. The secure module proves that parameterized query binding blocks the same bypass by treating input as data rather than executable SQL syntax — a structural guarantee that operates at the DB execution layer and cannot be circumvented through input content manipulation, including encoding tricks or payload variations.
+
+Defence-in-depth controls (bcrypt, lockout, logging) address related threat vectors: credential theft through database exposure, online brute-force attacks, and lack of incident traceability.
+
+All 5 automated tests pass. A 17-row manual test matrix confirms all three injection payload classes bypass the vulnerable flow and are blocked by the secure flow, while valid credentials continue to work correctly.
+
+The central conclusion: parameterized queries are an essential baseline for any database-backed authentication system. Their guarantee is structural, not dependent on input filtering, and is maintained across all payload variations.
+
+---
+
+## 9. References (IEEE Format)
+
+[1] OWASP Foundation, "OWASP Top 10:2021 — A03 Injection," 2021. [Online]. Available: https://owasp.org/Top10/A03_2021-Injection/
+
+[2] sqlmap project, "sqlmap: Automatic SQL injection and database takeover tool," GitHub repository, 2024. [Online]. Available: https://github.com/sqlmapproject/sqlmap
+
+[3] PortSwigger Ltd., "Burp Suite Documentation," 2024. [Online]. Available: https://portswigger.net/burp/documentation
+
+[4] OWASP Foundation, "SQL Injection Prevention Cheat Sheet," OWASP Cheat Sheet Series, 2024. [Online]. Available: https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html
+
+[5] N. Provos and D. Mazières, "A Future-Adaptable Password Scheme," in *Proc. USENIX Annual Technical Conference, FREENIX Track*, Monterey, CA, 1999, pp. 81–91.
+
+[6] Python Software Foundation, "sqlite3 — DB-API 2.0 interface for SQLite databases," 2024. [Online]. Available: https://docs.python.org/3/library/sqlite3.html
+
+[7] Python Package Index, "bcrypt 5.0.0," 2026. [Online]. Available: https://pypi.org/project/bcrypt/
+
+[8] W. Stallings, *Cryptography and Network Security: Principles and Practice*, 8th ed. Pearson, 2023.
+
+[9] D. Gollmann, *Computer Security*, 3rd ed. Wiley, 2006.
+
+[10] J. Forristal, "NT Web Technology Vulnerabilities," *Phrack Magazine*, vol. 8, no. 54, 1998. [Online]. Available: http://phrack.org/issues/54/8.html
+
+---
+
+*Adimulam Yaswanth Veera Nagesh (B230755CS) · CS4032E Computer Security · NIT Calicut · Winter 2025-26*
